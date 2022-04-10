@@ -1,12 +1,10 @@
-package top.gn.rpc.test;
+package top.gn.rpc.register;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.gn.rpc.enumeration.RpcError;
 import top.gn.rpc.exception.RpcException;
-import top.gn.rpc.register.ServiceRegister;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,13 +27,21 @@ public class DefaultServiceRegistry implements ServiceRegister {
         registerService.add(serviceName);
         Class<?>[] interfaces = service.getClass().getInterfaces();
         if (interfaces.length == 0) {
-            throw new RpcException(RpcError.SERVICE_NOTIMPLEMENT_ANY_INTERFACE);
+            throw new RpcException(RpcError.SERVICE_NOT_IMPLEMENT_ANY_INTERFACE);
         }
 
+        for (Class<?> i : interfaces) {
+            serviceMap.put(i.getCanonicalName(),service);
+        }
+        logger.info("向接口：{} 注册服务:{}", interfaces, serviceName);
     }
 
     @Override
-    public Object getService(String serviceName) {
-        return null;
+    public synchronized Object getService(String serviceName) {
+        Object service = serviceMap.get(serviceName);
+        if (service == null) {
+            throw new RpcException(RpcError.SERVICE_NOT_FOUND);
+        }
+        return service;
     }
 }

@@ -1,4 +1,4 @@
-package top.gn.rpc.server;
+package top.gn.rpc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,17 +6,10 @@ import top.gn.rpc.entity.RpcRequest;
 import top.gn.rpc.entity.RpcResponse;
 import top.gn.rpc.enumeration.ResponseCode;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.Socket;
 
 public class RequestHandler {
-
-    private Socket socket;
-    private Object service;
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 

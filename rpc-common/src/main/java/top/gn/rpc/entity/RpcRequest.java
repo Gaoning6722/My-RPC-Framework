@@ -1,13 +1,17 @@
 package top.gn.rpc.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-@Builder
+@AllArgsConstructor
 public class RpcRequest implements Serializable {
+    public RpcRequest() {
+    }
+
     /**
      * 待调用接口的名称
      */

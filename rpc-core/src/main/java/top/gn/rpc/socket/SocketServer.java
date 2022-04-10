@@ -1,17 +1,19 @@
-package top.gn.rpc.server;
+package top.gn.rpc.socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.gn.rpc.register.ServiceRegister;
+import top.gn.rpc.RequestHandler;
+import top.gn.rpc.RequestHandlerThread;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
 
-public class RpcServer {
+public class SocketServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(RpcServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
     private static final int corePoolSize = 5;
     private static final int maximumPoolSize = 50;
@@ -22,7 +24,7 @@ public class RpcServer {
     private RequestHandler requestHandler = new RequestHandler();
     private final ServiceRegister serviceRegister;
 
-    public RpcServer(ServiceRegister serviceRegister) {
+    public SocketServer(ServiceRegister serviceRegister) {
         this.serviceRegister = serviceRegister;
         BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
         ThreadFactory threadFactory = Executors.defaultThreadFactory();

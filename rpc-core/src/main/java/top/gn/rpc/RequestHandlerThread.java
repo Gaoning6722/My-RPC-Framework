@@ -1,4 +1,4 @@
-package top.gn.rpc.server;
+package top.gn.rpc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,6 @@ import top.gn.rpc.register.ServiceRegister;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 
 public class RequestHandlerThread implements Runnable {

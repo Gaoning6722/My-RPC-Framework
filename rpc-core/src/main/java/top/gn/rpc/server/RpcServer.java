@@ -3,6 +3,7 @@ package top.gn.rpc.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
@@ -22,15 +23,14 @@ public class RpcServer {
     }
 
     public void register(Object service, int port) {
-        try(ServerSocket serverSocket = new ServerSocket(port)) {
-            logger.info("服务器正在启动!");
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            logger.info("服务器正在启动...");
             Socket socket;
-            while ((socket = serverSocket.accept()) != null) {
-                logger.info("客户端连接成功！ ip为：" + socket.getInetAddress());
-                threadPool.execute(new WorkerThread(socket, service));
+            while((socket = serverSocket.accept()) != null) {
+                logger.info("客户端连接！Ip为：" + socket.getInetAddress() + ":" + socket.getPort());
+                threadPool.execute(new RequestHandler(socket, service));
             }
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (IOException e) {
             logger.error("连接时有错误发生：", e);
         }
     }

@@ -10,9 +10,9 @@ package top.gn.rpc.register;
  *      首先实现一个容器，保存一个提供的服务的信息，并且在获得一个服务名字的时候
  *          能够返回这个服务的信息
  */
-public interface ServiceRegister {
+public interface ServiceProvider {
     //register注册信息
-    <T> void register(T service);
+    <T> void addServiceProvider(T service);
     //getService获取信息
-    Object getService(String serviceName);
+    Object getServiceProvider(String serviceName);
 }

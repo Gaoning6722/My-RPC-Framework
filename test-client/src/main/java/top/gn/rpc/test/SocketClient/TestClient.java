@@ -9,7 +9,7 @@ import top.gn.rpc.socket.SocketClient;
 
 public class TestClient {
     public static void main(String[] args) {
-        RpcClient client = new SocketClient("127.0.0.1",9999);
+        RpcClient client = new SocketClient();
         for (int i = 0; i < 5; i++) {
             RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
             HelloService helloService = rpcClientProxy.getProxy(HelloService.class);

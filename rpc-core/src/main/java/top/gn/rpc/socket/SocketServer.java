@@ -2,7 +2,7 @@ package top.gn.rpc.socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.gn.rpc.register.ServiceRegister;
+import top.gn.rpc.register.ServiceProvider;
 import top.gn.rpc.RequestHandler;
 import top.gn.rpc.RequestHandlerThread;
 
@@ -22,10 +22,10 @@ public class SocketServer {
     private final ExecutorService threadPool;
 
     private RequestHandler requestHandler = new RequestHandler();
-    private final ServiceRegister serviceRegister;
+    private final ServiceProvider serviceProvider;
 
-    public SocketServer(ServiceRegister serviceRegister) {
-        this.serviceRegister = serviceRegister;
+    public SocketServer(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
         BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
         threadPool = new ThreadPoolExecutor(corePoolSize,maximumPoolSize,keepAliveTime,TimeUnit.SECONDS,workingQueue,threadFactory);
@@ -37,7 +37,7 @@ public class SocketServer {
             Socket socket;
             while((socket = serverSocket.accept()) != null) {
                 logger.info("消费者连接:{} : {} Ip为：", socket.getInetAddress(), socket.getPort());
-                threadPool.execute(new RequestHandlerThread(socket,requestHandler,serviceRegister));
+                threadPool.execute(new RequestHandlerThread(socket,requestHandler, serviceProvider));
             }
         } catch (IOException e) {
             logger.error("连接时有错误发生：", e);

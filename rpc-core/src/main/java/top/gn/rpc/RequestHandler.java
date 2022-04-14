@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import top.gn.rpc.entity.RpcRequest;
 import top.gn.rpc.entity.RpcResponse;
 import top.gn.rpc.enumeration.ResponseCode;
+import top.gn.rpc.register.ServiceProvider;
+import top.gn.rpc.register.ServiceProviderImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,9 +14,15 @@ import java.lang.reflect.Method;
 public class RequestHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final ServiceProvider serviceProvider;
 
-    public Object handle(RpcRequest rpcRequest, Object service) {
+    static {
+        serviceProvider = new ServiceProviderImpl();
+    }
+
+    public Object handle(RpcRequest rpcRequest) {
         Object result = null;
+        Object service = serviceProvider.getServiceProvider(rpcRequest.getInterfaceName());
         try {
             result = invokeTargetMethod(rpcRequest, service);
             logger.info("服务:{} 成功调用方法:{}", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());
@@ -28,7 +36,7 @@ public class RequestHandler {
         try {
             method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
         } catch (NoSuchMethodException e) {
-            return RpcResponse.fail(ResponseCode.METHOD_NOT_FOUND);
+            return RpcResponse.fail(ResponseCode.METHOD_NOT_FOUND,rpcRequest.getRequestId());
         }
         return method.invoke(service, rpcRequest.getParameters());
     }
